@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import type { LineItem } from "~/server/types/basket";
 import type { Favorite } from "~/server/types/user";
-import {id} from "postcss-selector-parser";
 
 const basketObj = ref({});
 const userObj = ref({});
@@ -105,7 +104,7 @@ function getDiscount(userId: string) {
     <h2>Basket</h2>
     <ul>
       <li>
-        <button v-on:click="fetchBasket">GET: /api/basket/getbasket</button>
+        <button v-on:click="fetchBasket()">GET: /api/basket/getbasket</button>
         <p>Returnerer kurv objekt</p>
       </li>
       <li>

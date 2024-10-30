@@ -11,6 +11,6 @@ export function createUserObject(): void {
 export function defaultUserData(): UserData {
     return {
         favorites: [],
-        discounts: []
+        discounts: [],
     };
 }

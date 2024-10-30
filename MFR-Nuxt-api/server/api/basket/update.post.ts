@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   updateBasketLineItemCount();
 
-  //Bereng total pris i kurv
+  //Beregn total pris i kurv
   updateBasketTotal();
 
   return global._BASKET_DATA;
@@ -47,22 +47,28 @@ function updateLineItems(lineItem: LineItem) {
 }
 
 function updateBasketLineItemCount() {
-  global._BASKET_DATA.totalQuantity = global._BASKET_DATA.lineItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  global._BASKET_DATA.totalQuantity = calculateTotalQuantity(global._BASKET_DATA.lineItems);
 }
 
-function updateBasketTotal() {
-  global._BASKET_DATA.totalPrice = global._BASKET_DATA.lineItems.reduce(
-    (acc, lineItem) => {
-      const discountedPrice =
-        lineItem.price * (1 - lineItem.discountPercentage / 100);
-      return acc + discountedPrice * lineItem.quantity;
-    },
-    0
-  );
+
+function calculateTotalQuantity(lineItems: LineItem[]): number {
+  return lineItems.reduce((total, item) => total + item.quantity, 0);
 }
+
+
+export function updateBasketTotal() {
+  const userDiscount = global._BASKET_DATA.userDiscount || 0;
+
+  global._BASKET_DATA.totalPrice = global._BASKET_DATA.lineItems.reduce((acc, lineItem) => {
+    // Brug userDiscount, hvis den er defineret, ellers brug lineItem.discountPercentage
+    const discountPercentage = userDiscount !== 0 ? userDiscount : lineItem.discountPercentage;
+    const discountedPrice = lineItem.price * (1 - discountPercentage / 100);
+    return acc + discountedPrice * lineItem.quantity;
+  }, 0);
+}
+
+
+
 
 function validateLineItem(item: any): { valid: boolean; message?: string } {
   if (

@@ -1,4 +1,4 @@
-import { createUserObject } from "~/server/api/user/personalDiscount/helpers";
+import { createUserObject } from "~/server/api/user/helpers";
 
 createUserObject();
 
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     if (!userId) {
         return {
             statusCode: 400,
-            body: JSON.stringify({ error: "User ID is required or user ID is invalid" }),
+            body: JSON.stringify({ error: "User ID is required" }),
         };
     }
 
