@@ -55,8 +55,6 @@ function calculateTotalQuantity(lineItems: LineItem[]): number {
 }
 
 
-let userDiscount = 0; // Startværdi som 0, opdateres hvis en personlig rabat hentes
-
 export function updateBasketTotal() {
   global._BASKET_DATA.totalPrice = global._BASKET_DATA.lineItems.reduce((acc, lineItem) => {
     const discountedPrice = lineItem.price * (1 - lineItem.discountPercentage / 100);
@@ -71,12 +69,11 @@ export function updateBasketTotal() {
 
 
 
+
 function validateLineItem(item: any): { valid: boolean; message?: string } {
-  if (
-    typeof item.discountPercentage !== "number" ||
-    item.discountPercentage < 0 ||
-    item.discountPercentage > 100
-  ) {
+  const discount = typeof item.discountPercentage === 'number' ? item.discountPercentage : 0;
+
+  if (discount < 0 || discount > 100) {
     return { valid: false, message: "Invalid discountPercentage" };
   }
   if (typeof item.price !== "number" || item.price < 0) {
@@ -93,3 +90,4 @@ function validateLineItem(item: any): { valid: boolean; message?: string } {
   }
   return { valid: true };
 }
+

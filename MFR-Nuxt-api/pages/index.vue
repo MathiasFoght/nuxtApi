@@ -57,10 +57,11 @@ function dummyProduct(): LineItem {
     price: 100,
     quantity: Math.floor(Math.random() * 5),
     sku: "sku-" + k,
-    // Brug den personlige rabat, hvis tilgængelig, ellers produktets egen rabat
-    discountPercentage: discountObj.value.discount || Math.floor(Math.random() * 20),
+    // Tjek om discountObj har en numerisk rabat; hvis ikke, brug produktets egen
+    discountPercentage: typeof discountObj.value.discount === "number" ? discountObj.value.discount : Math.floor(Math.random() * 20),
   };
 }
+
 
 
 function getFavorites() {
