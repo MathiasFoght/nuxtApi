@@ -123,7 +123,7 @@ function getDiscount(userId: string) {
         <p>Nulstiller kurven og returnerer tom kurv objekt</p>
       </li>
       <li>
-        <button v-on:click="callPost('/api/basket/update', '123')">
+        <button v-on:click="callPost('/api/basket/update', '')">
           POST: /api/basket/update
         </button>
         <p>
@@ -157,7 +157,7 @@ function getDiscount(userId: string) {
       </li>
 
       <li>
-        <button v-on:click="getDiscount('123')">
+        <button v-on:click="getDiscount('')">
           GET: /api/user/personalDiscount/getPersonalDiscount
         </button>
         <p>Returnerer brugerens personlige rabat</p>
