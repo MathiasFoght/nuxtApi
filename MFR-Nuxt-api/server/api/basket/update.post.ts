@@ -63,13 +63,6 @@ export function updateBasketTotal() {
 }
 
 
-
-
-
-
-
-
-
 function validateLineItem(item: any): { valid: boolean; message?: string } {
   const discount = typeof item.discountPercentage === 'number' ? item.discountPercentage : 0;
 

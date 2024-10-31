@@ -8,7 +8,7 @@ const userObj = ref({});
 const discountObj = ref({});
 
 function callPost(path: string, userId?: string) {
-  // Hvis userId er tilgængelig, hent den personlige rabat
+  // Hvis userId findes, hent den personlige rabat
   const discountPromise = userId ? getDiscount(userId) : Promise.resolve();
 
   discountPromise.then(() => {
@@ -57,7 +57,7 @@ function dummyProduct(): LineItem {
     price: 100,
     quantity: Math.floor(Math.random() * 5),
     sku: "sku-" + k,
-    // Tjek om discountObj har en numerisk rabat; hvis ikke, brug produktets egen
+    // Tjek om discountObj er sat (dvs. der findes en personlig rabat), hvis ikke, brug produktets egen rabat
     discountPercentage: typeof discountObj.value.discount === "number" ? discountObj.value.discount : Math.floor(Math.random() * 20),
   };
 }
@@ -101,7 +101,7 @@ function getDiscount(userId: string) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        discountObj.value = data;
+        discountObj.value = data; // Hvis der er en personlig rabat, gemmes rabatten i discountObj -->  { discount: 25 }
       })
       .catch((error) => console.error(error));
 }
