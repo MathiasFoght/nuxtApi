@@ -13,6 +13,6 @@ export default defineEventHandler(async (event) => {
         };
     }
 
-    const discount = 10;
+    const discount = 25;
     return { discount };
 });

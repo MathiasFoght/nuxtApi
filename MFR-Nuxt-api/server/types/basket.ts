@@ -10,5 +10,4 @@ export type BasketData = {
   totalPrice: number;
   lineItems: LineItem[];
   totalQuantity: number;
-  userDiscount?: number;
 };

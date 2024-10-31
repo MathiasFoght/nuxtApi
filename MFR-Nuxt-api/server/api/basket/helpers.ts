@@ -7,7 +7,6 @@ export function defaultBasketData(): BasketData {
     totalPrice: 0,
     lineItems: [],
     totalQuantity: 0,
-    userDiscount: 0,
   };
 }
 

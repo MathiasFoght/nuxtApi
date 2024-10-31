@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
   updateLineItems(body);
 
   //Beregn total antal lineItems i kurv
-
   updateBasketLineItemCount();
 
   //Beregn total pris i kurv
@@ -56,16 +55,18 @@ function calculateTotalQuantity(lineItems: LineItem[]): number {
 }
 
 
-export function updateBasketTotal() {
-  const userDiscount = global._BASKET_DATA.userDiscount || 0;
+let userDiscount = 0; // Startværdi som 0, opdateres hvis en personlig rabat hentes
 
+export function updateBasketTotal() {
   global._BASKET_DATA.totalPrice = global._BASKET_DATA.lineItems.reduce((acc, lineItem) => {
-    // Brug userDiscount, hvis den er defineret, ellers brug lineItem.discountPercentage
-    const discountPercentage = userDiscount !== 0 ? userDiscount : lineItem.discountPercentage;
-    const discountedPrice = lineItem.price * (1 - discountPercentage / 100);
+    const discountedPrice = lineItem.price * (1 - lineItem.discountPercentage / 100);
     return acc + discountedPrice * lineItem.quantity;
   }, 0);
 }
+
+
+
+
 
 
 

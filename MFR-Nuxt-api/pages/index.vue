@@ -7,21 +7,28 @@ const basketObj = ref({});
 const userObj = ref({});
 const discountObj = ref({});
 
-function callPost(path: string) {
-  fetch(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(dummyProduct()),
-  })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        basketObj.value = data;
-      })
-      .catch((error) => console.error(error));
+function callPost(path: string, userId?: string) {
+  // Hvis userId er tilgængelig, hent den personlige rabat
+  const discountPromise = userId ? getDiscount(userId) : Promise.resolve();
+
+  discountPromise.then(() => {
+    fetch(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dummyProduct()),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          basketObj.value = data;
+        })
+        .catch((error) => console.error(error));
+  });
 }
+
+
 
 function fetchBasket() {
   fetch("/api/basket/getbasket")
@@ -50,9 +57,11 @@ function dummyProduct(): LineItem {
     price: 100,
     quantity: Math.floor(Math.random() * 5),
     sku: "sku-" + k,
-    discountPercentage: Math.floor(Math.random() * 50),
+    // Brug den personlige rabat, hvis tilgængelig, ellers produktets egen rabat
+    discountPercentage: discountObj.value.discount || Math.floor(Math.random() * 20),
   };
 }
+
 
 function getFavorites() {
   fetch("/api/user/favorites/getfavorites")
@@ -87,7 +96,7 @@ function dummyFavoriteItem(): Favorite {
 }
 
 function getDiscount(userId: string) {
-  fetch(`/api/user/personalDiscount/getPersonalDiscount?userId=${userId}`)
+  return fetch(`/api/user/personalDiscount/getPersonalDiscount?userId=${userId}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -95,6 +104,7 @@ function getDiscount(userId: string) {
       })
       .catch((error) => console.error(error));
 }
+
 </script>
 
 <template>
@@ -112,7 +122,7 @@ function getDiscount(userId: string) {
         <p>Nulstiller kurven og returnerer tom kurv objekt</p>
       </li>
       <li>
-        <button v-on:click="callPost('/api/basket/update')">
+        <button v-on:click="callPost('/api/basket/update', '123')">
           POST: /api/basket/update
         </button>
         <p>
@@ -146,7 +156,7 @@ function getDiscount(userId: string) {
       </li>
 
       <li>
-        <button v-on:click="getDiscount('')">
+        <button v-on:click="getDiscount('123')">
           GET: /api/user/personalDiscount/getPersonalDiscount
         </button>
         <p>Returnerer brugerens personlige rabat</p>
